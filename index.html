@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nimbus Innovations — Practical Education for Real India</title>
+<link href="https://fonts.googleapis.com/css2?family=Fugaz+One&family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --red:#e01c1c;--red-dark:#a01010;--red-glow:rgba(224,28,28,0.18);
+  --ink:#080808;--ink2:#141414;--ink3:#1e1e1e;
+  --white:#ffffff;--off:#f2f2f2;
+  --muted:rgba(255,255,255,0.38);--muted2:rgba(255,255,255,0.6);
+  --border:rgba(255,255,255,0.07);--border-red:rgba(224,28,28,0.25);
+}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--ink);color:var(--white);overflow-x:hidden;cursor:none;}
+
+/* CURSOR */
+#cursor{position:fixed;width:10px;height:10px;background:var(--red);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform 0.1s,width 0.2s,height 0.2s;}
+#cursor-ring{position:fixed;width:36px;height:36px;border:1.5px solid rgba(224,28,28,0.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform 0.12s,width 0.2s,height 0.2s,border-color 0.2s;}
+body:hover #cursor{opacity:1;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 5vw;height:66px;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,8,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Fugaz One',cursive;font-size:1.2rem;letter-spacing:0.05em;color:var(--white);text-decoration:none;}
+.logo span{color:var(--red);}
+nav ul{list-style:none;display:flex;gap:2rem;}
+nav ul a{text-decoration:none;font-size:0.83rem;font-weight:500;color:var(--muted);transition:color 0.2s;letter-spacing:0.02em;}
+nav ul a:hover{color:var(--white);}
+.nav-cta{background:var(--red)!important;color:var(--white)!important;padding:7px 18px;border-radius:5px;}
+.nav-cta:hover{background:var(--red-dark)!important;}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;}
+.hamburger span{width:22px;height:2px;background:var(--white);border-radius:2px;transition:all 0.3s;}
+
+/* 3D CANVAS */
+#hero-canvas{position:absolute;inset:0;z-index:0;}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;padding:6rem 5vw 4rem;position:relative;overflow:hidden;}
+.hero-grid-bg{position:absolute;inset:0;z-index:0;background-image:linear-gradient(rgba(224,28,28,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(224,28,28,0.05) 1px,transparent 1px);background-size:60px 60px;}
+.hero-content{position:relative;z-index:2;max-width:700px;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(224,28,28,0.1);color:#ff8080;font-size:0.75rem;font-weight:500;padding:5px 14px;border-radius:20px;margin-bottom:1.8rem;border:1px solid var(--border-red);letter-spacing:0.08em;text-transform:uppercase;animation:fadeUp 0.7s ease both;}
+.hero-eyebrow::before{content:'';width:5px;height:5px;background:var(--red);border-radius:50%;}
+.hero h1{font-family:'Syne',sans-serif;font-size:clamp(3rem,6vw,5.5rem);font-weight:800;line-height:1.05;letter-spacing:-0.03em;margin-bottom:1.4rem;animation:fadeUp 0.7s 0.1s ease both;}
+.hero h1 .line2{color:var(--red);}
+.hero-sub{font-size:1.1rem;color:var(--muted2);max-width:500px;margin-bottom:2.5rem;font-weight:300;line-height:1.75;animation:fadeUp 0.7s 0.2s ease both;}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;animation:fadeUp 0.7s 0.3s ease both;}
+.btn-red{background:var(--red);color:var(--white);padding:13px 30px;border-radius:6px;font-size:0.92rem;font-weight:500;text-decoration:none;border:none;cursor:pointer;transition:background 0.2s,transform 0.15s;display:inline-block;}
+.btn-red:hover{background:var(--red-dark);transform:translateY(-2px);}
+.btn-ghost{background:transparent;color:var(--muted2);padding:13px 30px;border-radius:6px;font-size:0.92rem;font-weight:500;text-decoration:none;border:1px solid var(--border);cursor:pointer;transition:border-color 0.2s,color 0.2s,transform 0.15s;display:inline-block;}
+.btn-ghost:hover{border-color:rgba(224,28,28,0.4);color:var(--white);transform:translateY(-2px);}
+.hero-3d{position:absolute;right:4vw;top:50%;transform:translateY(-50%);z-index:2;width:420px;height:420px;}
+.hero-3d canvas{width:100%!important;height:100%!important;}
+
+/* SCROLL INDICATOR */
+.scroll-ind{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;animation:fadeUp 1s 0.8s ease both;opacity:0;}
+.scroll-ind span{font-size:0.7rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;}
+.scroll-line{width:1px;height:50px;background:linear-gradient(to bottom,var(--red),transparent);animation:scrollPulse 2s infinite;}
+
+/* SECTION BASE */
+section{padding:7rem 5vw;}
+.sec-label{font-size:0.7rem;font-weight:500;color:var(--red);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.8rem;}
+.sec-title{font-family:'Syne',sans-serif;font-size:clamp(2rem,3.5vw,3rem);font-weight:800;line-height:1.15;letter-spacing:-0.02em;margin-bottom:1rem;}
+.sec-sub{font-size:1rem;color:var(--muted2);max-width:500px;font-weight:300;margin-bottom:3.5rem;line-height:1.75;}
+
+/* REVEAL ANIMATIONS */
+.reveal{opacity:0;transform:translateY(36px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-left{opacity:0;transform:translateX(-36px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.reveal-left.visible{opacity:1;transform:translateX(0);}
+.reveal-right{opacity:0;transform:translateX(36px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.reveal-right.visible{opacity:1;transform:translateX(0);}
+.reveal-scale{opacity:0;transform:scale(0.92);transition:opacity 0.6s ease,transform 0.6s ease;}
+.reveal-scale.visible{opacity:1;transform:scale(1);}
+
+/* STATS */
+.stats-bar{background:var(--red);padding:2rem 5vw;display:flex;justify-content:space-around;flex-wrap:wrap;gap:2rem;}
+.stat-item{text-align:center;}
+.stat-num{font-family:'Fugaz One',cursive;font-size:2.5rem;color:var(--white);line-height:1;}
+.stat-lbl{font-size:0.78rem;color:rgba(255,255,255,0.72);margin-top:4px;letter-spacing:0.05em;text-transform:uppercase;}
+
+/* PROBLEM */
+.problem{background:var(--ink2);}
+.problem-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:var(--border);}
+.problem-card{background:var(--ink2);padding:2.5rem 2rem;transition:background 0.3s;}
+.problem-card:hover{background:rgba(224,28,28,0.06);}
+.p-num{font-family:'Fugaz One',cursive;font-size:3rem;color:rgba(224,28,28,0.15);line-height:1;margin-bottom:1rem;}
+.problem-card h3{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:0.5rem;}
+.problem-card p{font-size:0.88rem;color:var(--muted);line-height:1.7;}
+
+/* WORKSHOPS */
+.workshops{background:var(--ink);}
+.workshop-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;}
+.w-card{background:var(--ink2);border:1px solid var(--border);border-radius:14px;padding:0;overflow:hidden;transition:transform 0.3s,border-color 0.3s;position:relative;}
+.w-card:hover{transform:translateY(-8px);border-color:var(--border-red);}
+.w-card-top{height:180px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.w-card-top canvas{position:absolute;inset:0;width:100%!important;height:100%!important;}
+.w-card-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,var(--ink2));}
+.w-icon{position:relative;z-index:1;font-size:3rem;}
+.w-card-body{padding:1.5rem;}
+.w-card-body h3{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:0.4rem;}
+.w-card-body p{font-size:0.85rem;color:var(--muted);line-height:1.65;}
+.w-tag{display:inline-block;font-size:0.7rem;font-weight:500;color:var(--red);background:rgba(224,28,28,0.1);border:1px solid var(--border-red);padding:3px 10px;border-radius:20px;margin-top:1rem;letter-spacing:0.05em;text-transform:uppercase;}
+
+/* SOLUTION */
+.solution{background:var(--ink2);}
+.sol-wrap{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;}
+.sol-list{display:flex;flex-direction:column;gap:1.5rem;}
+.sol-item{display:flex;gap:1.2rem;align-items:flex-start;padding:1.4rem;border-radius:10px;border:1px solid transparent;transition:border-color 0.25s,background 0.25s;}
+.sol-item:hover{border-color:var(--border-red);background:rgba(224,28,28,0.04);}
+.sol-n{font-family:'Fugaz One',cursive;font-size:1.8rem;color:var(--red);line-height:1;min-width:36px;}
+.sol-item h4{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:5px;}
+.sol-item p{font-size:0.87rem;color:var(--muted);line-height:1.65;}
+.workshop-info{background:var(--ink3);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+.wi-header{background:var(--red);padding:2rem;}
+.wi-header h3{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;margin-bottom:4px;}
+.wi-header p{font-size:0.85rem;color:rgba(255,255,255,0.72);font-weight:300;}
+.wi-list{padding:1.5rem 2rem;list-style:none;display:flex;flex-direction:column;gap:12px;}
+.wi-list li{display:flex;align-items:flex-start;gap:10px;font-size:0.9rem;color:var(--muted2);}
+.wi-list li::before{content:'';width:5px;height:5px;background:var(--red);border-radius:50%;flex-shrink:0;margin-top:8px;}
+
+/* VISION */
+.vision{background:var(--ink);}
+.vision-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-radius:14px;overflow:hidden;}
+.v-step{background:var(--ink);padding:2.5rem 2rem;transition:background 0.3s;}
+.v-step:hover{background:rgba(224,28,28,0.06);}
+.v-n{font-family:'Fugaz One',cursive;font-size:3.5rem;color:rgba(224,28,28,0.18);line-height:1;margin-bottom:1rem;}
+.v-step h3{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:0.5rem;}
+.v-step p{font-size:0.85rem;color:var(--muted);line-height:1.65;}
+
+/* QUOTE STRIP */
+.quote-strip{background:var(--red);padding:3rem 5vw;text-align:center;}
+.quote-strip blockquote{font-family:'Syne',sans-serif;font-size:clamp(1.4rem,3vw,2.2rem);font-weight:800;color:var(--white);letter-spacing:-0.01em;line-height:1.3;}
+.quote-strip cite{display:block;margin-top:1rem;font-size:0.82rem;color:rgba(255,255,255,0.65);font-style:normal;letter-spacing:0.08em;text-transform:uppercase;}
+
+/* ABOUT */
+.about{background:var(--ink2);}
+.about-wrap{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;}
+.about-text p{font-size:0.95rem;color:var(--muted2);line-height:1.8;margin-bottom:1rem;font-weight:300;}
+.founder-card{background:var(--ink);border:1px solid var(--border);border-radius:14px;padding:2.5rem;}
+.f-avatar{width:62px;height:62px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-family:'Fugaz One',cursive;font-size:1.5rem;color:var(--white);margin-bottom:1.2rem;}
+.founder-card h4{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:3px;}
+.founder-card .role{font-size:0.78rem;color:var(--red);font-weight:500;margin-bottom:1.2rem;letter-spacing:0.05em;text-transform:uppercase;}
+.founder-card p{font-size:0.87rem;color:var(--muted);line-height:1.7;}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:1.4rem;}
+.badge{font-size:0.72rem;font-weight:500;padding:4px 12px;border-radius:20px;background:rgba(224,28,28,0.1);color:#ff9090;border:1px solid var(--border-red);}
+
+/* AUDIENCE */
+.audience{background:var(--ink);}
+.aud-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;}
+.aud-card{background:var(--ink2);border:1px solid var(--border);border-radius:12px;padding:2rem 1.8rem;transition:transform 0.3s,border-color 0.3s;}
+.aud-card:hover{transform:translateY(-6px);border-color:var(--border-red);}
+.aud-card .a-icon{font-size:2rem;margin-bottom:1rem;}
+.aud-card h3{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:0.4rem;}
+.aud-card p{font-size:0.85rem;color:var(--muted);line-height:1.6;}
+
+/* CTA */
+.cta{background:var(--ink);padding:8rem 5vw;text-align:center;position:relative;overflow:hidden;}
+.cta-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(224,28,28,0.1) 0%,transparent 70%);}
+.cta-content{position:relative;z-index:1;}
+.cta h2{font-family:'Syne',sans-serif;font-size:clamp(2.2rem,4.5vw,4rem);font-weight:800;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1.2rem;}
+.cta h2 span{color:var(--red);}
+.cta p{font-size:1.05rem;color:var(--muted);max-width:460px;margin:0 auto 2.5rem;font-weight:300;}
+
+/* FOOTER */
+footer{background:#050505;padding:2.5rem 5vw;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-top:1px solid var(--border);}
+footer .logo{font-size:1.1rem;}
+footer p{font-size:0.8rem;color:rgba(255,255,255,0.25);}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+@keyframes scrollPulse{0%,100%{opacity:1;}50%{opacity:0.2;}}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
+@keyframes rotate360{from{transform:rotateY(0deg);}to{transform:rotateY(360deg);}}
+@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+@keyframes counterSpin{from{transform:rotate(0deg);}to{transform:rotate(-360deg);}}
+
+/* MOBILE */
+@media(max-width:900px){
+  .hero-3d{display:none;}
+  .sol-wrap,.about-wrap{grid-template-columns:1fr;gap:3rem;}
+  .vision-row{grid-template-columns:1fr 1fr;}
+  nav ul{display:none;}
+  .hamburger{display:flex;}
+}
+@media(max-width:600px){
+  .vision-row{grid-template-columns:1fr;}
+  section{padding:4rem 5vw;}
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">NIMBUS <span>INNOVATIONS</span></a>
+  <ul id="nav-links">
+    <li><a href="#problem">Problem</a></li>
+    <li><a href="#workshops">Workshops</a></li>
+    <li><a href="#vision">Vision</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact" class="nav-cta">Partner With Us</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid-bg"></div>
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Education &amp; Innovation · India</div>
+    <h1>Build.<br/><span class="line2">Innovate.</span><br/>Transform.</h1>
+    <p class="hero-sub">Nimbus Innovations brings hands-on STEM workshops to schools across India — closing the gap between textbooks and the real world.</p>
+    <div class="hero-btns">
+      <a href="#contact" class="btn-red">Partner With Your School</a>
+      <a href="#workshops" class="btn-ghost">Explore Workshops</a>
+    </div>
+  </div>
+  <div class="hero-3d">
+    <canvas id="hero-3d-canvas"></canvas>
+  </div>
+  <div class="scroll-ind">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat-item reveal"><div class="stat-num">4+</div><div class="stat-lbl">Workshop Categories</div></div>
+  <div class="stat-item reveal"><div class="stat-num">2–3</div><div class="stat-lbl">Day Programs</div></div>
+  <div class="stat-item reveal"><div class="stat-num">Tier 2</div><div class="stat-lbl">& Tier 3 Focus</div></div>
+  <div class="stat-item reveal"><div class="stat-num">∞</div><div class="stat-lbl">Student Potential</div></div>
+</div>
+
+<!-- PROBLEM -->
+<section class="problem" id="problem">
+  <div class="reveal">
+    <div class="sec-label">The Core Problem</div>
+    <h2 class="sec-title">Students aren't lacking<br/>intelligence. They lack<br/>exposure.</h2>
+    <p class="sec-sub">India's classrooms produce sharp minds — but the system fails to channel that intelligence into real-world capability.</p>
+  </div>
+  <div class="problem-cards">
+    <div class="problem-card reveal">
+      <div class="p-num">01</div>
+      <h3>Overly Theoretical</h3>
+      <p>Students memorize for exams but never get to build, test, or experience how things work in the real world.</p>
+    </div>
+    <div class="problem-card reveal">
+      <div class="p-num">02</div>
+      <h3>Industry Disconnect</h3>
+      <p>A massive gap exists between what schools teach and what companies, labs, and the modern economy actually needs.</p>
+    </div>
+    <div class="problem-card reveal">
+      <div class="p-num">03</div>
+      <h3>Zero Exposure</h3>
+      <p>Without early exposure to real tools like robotics, AI, or electronics — students never discover their true potential.</p>
+    </div>
+    <div class="problem-card reveal">
+      <div class="p-num">04</div>
+      <h3>No Direction</h3>
+      <p>Talented students drift without structured mentorship or project-based opportunities to channel their creativity.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WORKSHOPS -->
+<section class="workshops" id="workshops">
+  <div class="reveal">
+    <div class="sec-label">What We Teach</div>
+    <h2 class="sec-title">Four cutting-edge<br/>workshop categories.</h2>
+    <p class="sec-sub">Every workshop is hands-on, team-based, and built around real-world projects students actually build and present.</p>
+  </div>
+  <div class="workshop-grid">
+    <div class="w-card reveal-scale">
+      <div class="w-card-top" style="background:linear-gradient(135deg,#0a0a0a,#1a0a0a);">
+        <canvas class="ws-canvas" data-type="printer"></canvas>
+        <div class="w-card-overlay"></div>
+      </div>
+      <div class="w-card-body">
+        <h3>3D Printing</h3>
+        <p>Students design and print real objects — from mechanical parts to custom prototypes. Learn CAD, slicing, and additive manufacturing from scratch.</p>
+        <span class="w-tag">Design & Fabrication</span>
+      </div>
+    </div>
+    <div class="w-card reveal-scale">
+      <div class="w-card-top" style="background:linear-gradient(135deg,#0a0a0f,#0a0a1a);">
+        <canvas class="ws-canvas" data-type="ai"></canvas>
+        <div class="w-card-overlay"></div>
+      </div>
+      <div class="w-card-body">
+        <h3>AI &amp; Machine Learning</h3>
+        <p>Build image classifiers, train basic models, and understand how AI thinks. No prior coding needed — just curiosity and teamwork.</p>
+        <span class="w-tag">Artificial Intelligence</span>
+      </div>
+    </div>
+    <div class="w-card reveal-scale">
+      <div class="w-card-top" style="background:linear-gradient(135deg,#0a0f0a,#0a1a0a);">
+        <canvas class="ws-canvas" data-type="robot"></canvas>
+        <div class="w-card-overlay"></div>
+      </div>
+      <div class="w-card-body">
+        <h3>Robotics &amp; IoT</h3>
+        <p>Assemble, wire, and program robots and smart devices. Students build sensor-based systems and learn electronics fundamentals hands-on.</p>
+        <span class="w-tag">Hardware + Code</span>
+      </div>
+    </div>
+    <div class="w-card reveal-scale">
+      <div class="w-card-top" style="background:linear-gradient(135deg,#0f0a0a,#1a0f0a);">
+        <canvas class="ws-canvas" data-type="drone"></canvas>
+        <div class="w-card-overlay"></div>
+      </div>
+      <div class="w-card-body">
+        <h3>Drone Technology</h3>
+        <p>Understand aerodynamics, flight controllers, and basic programming for drones. Students fly, calibrate, and program their own drones.</p>
+        <span class="w-tag">Aerospace & Control</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section class="solution" id="solution">
+  <div class="sol-wrap">
+    <div class="reveal-left">
+      <div class="sec-label">Our Model</div>
+      <h2 class="sec-title">How Nimbus<br/>Innovations works.</h2>
+      <p class="sec-sub">We plug directly into your school calendar — no disruption, maximum impact.</p>
+      <div class="sol-list">
+        <div class="sol-item">
+          <div class="sol-n">01</div>
+          <div><h4>School Partnership</h4><p>We work with principals and admins to schedule a 2–3 day workshop that fits your academic calendar.</p></div>
+        </div>
+        <div class="sol-item">
+          <div class="sol-n">02</div>
+          <div><h4>Team-Based Learning</h4><p>Students form teams, choose a challenge, and build a real working project — not a model. A real thing.</p></div>
+        </div>
+        <div class="sol-item">
+          <div class="sol-n">03</div>
+          <div><h4>Expert Mentorship</h4><p>Our mentors come from real startup and tech backgrounds — not textbooks. They teach by doing.</p></div>
+        </div>
+        <div class="sol-item">
+          <div class="sol-n">04</div>
+          <div><h4>Demo Day</h4><p>Every workshop ends with a presentation where students showcase what they built to peers, faculty, and parents.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="workshop-info reveal-right">
+      <div class="wi-header">
+        <h3>STEM & Innovation Workshop</h3>
+        <p>2–3 day intensive program · Conducted at your school</p>
+      </div>
+      <ul class="wi-list">
+        <li>Real-world problem statements — not textbook exercises</li>
+        <li>Choose from 4 tracks: 3D Printing, AI/ML, Robotics/IoT, Drones</li>
+        <li>Fully equipped — we bring all the tools and materials</li>
+        <li>Hands-on time: 80% of the workshop is building, not listening</li>
+        <li>Certificate of participation for every student</li>
+        <li>Post-workshop report shared with school administration</li>
+        <li>Zero disruption to regular academic schedule</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTE -->
+<div class="quote-strip reveal">
+  <blockquote>"Students are not lacking intelligence — they lack direction, exposure, and the opportunity to build real things."</blockquote>
+  <cite>— Founder, Nimbus Innovations</cite>
+</div>
+
+<!-- VISION -->
+<section class="vision" id="vision">
+  <div class="reveal">
+    <div class="sec-label">Long-Term Vision</div>
+    <h2 class="sec-title">Building India's innovation<br/>ecosystem — from the ground up.</h2>
+    <p class="sec-sub">Every workshop plants a seed. The long-term goal is a national network of innovation labs and centers.</p>
+  </div>
+  <div class="vision-row">
+    <div class="v-step reveal">
+      <div class="v-n">01</div>
+      <h3>School Workshops</h3>
+      <p>2–3 day STEM programs that spark curiosity and give students a first taste of real innovation.</p>
+    </div>
+    <div class="v-step reveal">
+      <div class="v-n">02</div>
+      <h3>Innovation Labs</h3>
+      <p>Permanent maker-spaces set up inside school campuses — dedicated to building, tinkering, and creating.</p>
+    </div>
+    <div class="v-step reveal">
+      <div class="v-n">03</div>
+      <h3>City Centers</h3>
+      <p>Innovation hubs across cities where students from multiple schools collaborate on larger projects.</p>
+    </div>
+    <div class="v-step reveal">
+      <div class="v-n">04</div>
+      <h3>National Network</h3>
+      <p>A connected ecosystem of schools, mentors, and young innovators building the future of India.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-wrap">
+    <div class="about-text reveal-left">
+      <div class="sec-label">Who We Are</div>
+      <h2 class="sec-title">Built from real<br/>experience.</h2>
+      <p>Nimbus Innovations was born from firsthand experience — building a tech startup, mentoring student interns, and competing in hackathons across India.</p>
+      <p>Every one of those experiences revealed the same thing: students are sharp, creative, and driven — but the system doesn't give them the tools or direction they need.</p>
+      <p>We are not an NGO. Not a coaching class. We are a <strong>practical education partner</strong> — the bridge between what students learn and what the world needs them to do.</p>
+    </div>
+    <div class="founder-card reveal-right">
+      <div class="f-avatar">N</div>
+      <h4>Founder, Nimbus Innovations</h4>
+      <div class="role">Educator · Entrepreneur · Innovator</div>
+      <p>Previously built Nimbus Gaming (tech startup), worked hands-on with student interns, and participated in multiple national hackathons — all of which led to the founding of this initiative.</p>
+      <div class="badges">
+        <span class="badge">Startup Founder</span>
+        <span class="badge">Hackathon Veteran</span>
+        <span class="badge">Student Mentor</span>
+        <span class="badge">STEM Advocate</span>
+        <span class="badge">Tier 2 Focus</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AUDIENCE -->
+<section class="audience">
+  <div class="reveal">
+    <div class="sec-label">Who We Work With</div>
+    <h2 class="sec-title">For schools ready to<br/>do things differently.</h2>
+    <p class="sec-sub">We work with institutions that believe students deserve more than just exam preparation.</p>
+  </div>
+  <div class="aud-cards">
+    <div class="aud-card reveal-scale">
+      <div class="a-icon">🏫</div>
+      <h3>School Principals</h3>
+      <p>Leaders who want to differentiate their school and offer students a real competitive advantage.</p>
+    </div>
+    <div class="aud-card reveal-scale">
+      <div class="a-icon">📋</div>
+      <h3>Administrators</h3>
+      <p>Decision-makers who need structured, outcome-driven programs they can trust and present to stakeholders.</p>
+    </div>
+    <div class="aud-card reveal-scale">
+      <div class="a-icon">🌆</div>
+      <h3>Tier 2 & 3 Schools</h3>
+      <p>Institutions outside metros where the gap is widest — and where our impact can be the most transformative.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta" id="contact">
+  <div class="cta-bg"></div>
+  <div class="cta-content reveal">
+    <div class="sec-label">Get In Touch</div>
+    <h2>Ready to bring<br/><span>real innovation</span><br/>to your school?</h2>
+    <p>Let's talk about bringing a Nimbus Innovations workshop to your students. No commitment — just a conversation.</p>
+    <a href="mailto:hello@nimbusinnovations.in" class="btn-red">Partner With Us →</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="logo">NIMBUS <span>INNOVATIONS</span></a>
+  <p>© 2025 Nimbus Innovations · Transforming education, one school at a time.</p>
+  <p>hello@nimbusinnovations.in</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ── CUSTOM CURSOR ──
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+function animRing(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing);}
+animRing();
+document.querySelectorAll('a,button').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.width='18px';cur.style.height='18px';ring.style.width='52px';ring.style.height='52px';ring.style.borderColor='rgba(224,28,28,0.8)';});
+  el.addEventListener('mouseleave',()=>{cur.style.width='10px';cur.style.height='10px';ring.style.width='36px';ring.style.height='36px';ring.style.borderColor='rgba(224,28,28,0.5)';});
+});
+
+// ── HAMBURGER ──
+document.getElementById('hamburger').addEventListener('click',()=>{
+  const ul=document.getElementById('nav-links');
+  ul.style.display=ul.style.display==='flex'?'none':'flex';
+  ul.style.flexDirection='column';
+  ul.style.position='absolute';
+  ul.style.top='66px';ul.style.left='0';ul.style.right='0';
+  ul.style.background='rgba(8,8,8,0.98)';ul.style.padding='1.5rem 5vw';ul.style.gap='1.2rem';
+  ul.style.borderBottom='1px solid rgba(255,255,255,0.07)';
+});
+
+// ── SCROLL REVEALS ──
+const ro=new IntersectionObserver((entries)=>{
+  entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*90);ro.unobserve(e.target);}});
+},{threshold:0.12});
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale').forEach(el=>ro.observe(el));
+document.querySelector('.scroll-ind').style.opacity='1';
+
+// ── COUNTER ANIMATION ──
+function animCount(el,target,suffix){
+  let cur=0;const dur=2000;const step=target/dur*16;
+  const iv=setInterval(()=>{cur+=step;if(cur>=target){el.textContent=target+suffix;clearInterval(iv);}else{el.textContent=Math.floor(cur)+suffix;}},16);
+}
+
+// ── HERO BACKGROUND 3D (Three.js particles) ──
+(function(){
+  const canvas=document.getElementById('hero-canvas');
+  const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);
+  camera.position.z=5;
+  renderer.setSize(window.innerWidth,window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+
+  // Particles
+  const geo=new THREE.BufferGeometry();
+  const N=1800;const pos=new Float32Array(N*3);
+  for(let i=0;i<N*3;i++)pos[i]=(Math.random()-0.5)*22;
+  geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  const mat=new THREE.PointsMaterial({color:0xe01c1c,size:0.025,transparent:true,opacity:0.55});
+  const pts=new THREE.Points(geo,mat);
+  scene.add(pts);
+
+  // Floating wireframe sphere
+  const sGeo=new THREE.IcosahedronGeometry(1.6,1);
+  const sMat=new THREE.MeshBasicMaterial({color:0xe01c1c,wireframe:true,transparent:true,opacity:0.06});
+  const sphere=new THREE.Mesh(sGeo,sMat);
+  sphere.position.set(3.5,0,0);
+  scene.add(sphere);
+
+  window.addEventListener('resize',()=>{
+    camera.aspect=window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth,window.innerHeight);
+  });
+
+  let t=0;
+  function animate(){requestAnimationFrame(animate);t+=0.003;
+    pts.rotation.y=t*0.15;pts.rotation.x=t*0.08;
+    sphere.rotation.y=t*0.4;sphere.rotation.x=t*0.2;
+    sphere.position.y=Math.sin(t)*0.3;
+    renderer.render(scene,camera);}
+  animate();
+})();
+
+// ── HERO 3D OBJECT (Rotating Icosahedron) ──
+(function(){
+  const canvas=document.getElementById('hero-3d-canvas');
+  if(!canvas)return;
+  const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});
+  renderer.setSize(420,420);renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(50,1,0.1,100);
+  camera.position.z=4.5;
+
+  // Main geometry
+  const geo=new THREE.IcosahedronGeometry(1.4,0);
+  const mat=new THREE.MeshPhongMaterial({color:0xe01c1c,emissive:0x330000,shininess:80,transparent:true,opacity:0.85});
+  const mesh=new THREE.Mesh(geo,mat);
+  scene.add(mesh);
+
+  // Wireframe overlay
+  const wMat=new THREE.MeshBasicMaterial({color:0xff4444,wireframe:true,transparent:true,opacity:0.25});
+  const wire=new THREE.Mesh(geo,wMat);
+  scene.add(wire);
+
+  // Outer ring
+  const rGeo=new THREE.TorusGeometry(2.1,0.015,8,60);
+  const rMat=new THREE.MeshBasicMaterial({color:0xe01c1c,transparent:true,opacity:0.35});
+  const ring1=new THREE.Mesh(rGeo,rMat);ring1.rotation.x=Math.PI/2;
+  scene.add(ring1);
+
+  const r2=new THREE.Mesh(new THREE.TorusGeometry(2.5,0.01,8,60),new THREE.MeshBasicMaterial({color:0xff0000,transparent:true,opacity:0.18}));
+  r2.rotation.x=Math.PI/3;r2.rotation.y=Math.PI/4;
+  scene.add(r2);
+
+  // Lights
+  scene.add(new THREE.AmbientLight(0xffffff,0.3));
+  const dLight=new THREE.DirectionalLight(0xff3333,1.5);
+  dLight.position.set(2,3,2);scene.add(dLight);
+  const pLight=new THREE.PointLight(0xff0000,1.2,10);
+  pLight.position.set(-2,-1,2);scene.add(pLight);
+
+  let t=0;
+  function animate(){requestAnimationFrame(animate);t+=0.008;
+    mesh.rotation.x=t*0.5;mesh.rotation.y=t*0.7;
+    wire.rotation.x=t*0.5;wire.rotation.y=t*0.7;
+    ring1.rotation.z=t*0.3;ring1.rotation.x=Math.PI/2+Math.sin(t)*0.15;
+    r2.rotation.z=-t*0.2;r2.rotation.y=t*0.25;
+    mesh.position.y=Math.sin(t*0.8)*0.18;
+    renderer.render(scene,camera);}
+  animate();
+})();
+
+// ── WORKSHOP CARD MINI 3D ──
+document.querySelectorAll('.ws-canvas').forEach(canvas=>{
+  const type=canvas.dataset.type;
+  const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});
+  const w=canvas.parentElement.offsetWidth||260;
+  const h=180;
+  renderer.setSize(w,h);renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(55,w/h,0.1,100);
+  camera.position.z=3.5;
+  scene.add(new THREE.AmbientLight(0xffffff,0.4));
+  const dl=new THREE.DirectionalLight(0xff3333,1.5);dl.position.set(2,3,1);scene.add(dl);
+
+  let mesh,extra=[];
+
+  if(type==='printer'){
+    // Box with grid lines
+    const g=new THREE.BoxGeometry(1,0.15,1);
+    const m=new THREE.MeshPhongMaterial({color:0xe01c1c,transparent:true,opacity:0.8});
+    mesh=new THREE.Mesh(g,m);scene.add(mesh);
+    for(let i=0;i<3;i++){
+      const b=new THREE.Mesh(new THREE.BoxGeometry(0.85,0.15,0.05),new THREE.MeshPhongMaterial({color:0xff4444,transparent:true,opacity:0.6}));
+      b.position.y=0.15*i+0.2;b.position.z=-0.25+i*0.25;
+      scene.add(b);extra.push({m:b,speed:0.3+i*0.1});
+    }
+  } else if(type==='ai'){
+    // Neural network nodes
+    mesh=new THREE.Mesh(new THREE.SphereGeometry(0.3,16,16),new THREE.MeshPhongMaterial({color:0xe01c1c,emissive:0x220000}));
+    scene.add(mesh);
+    const positions=[[-1,0.7,0],[-1,0,0],[-1,-0.7,0],[0,0.5,0],[0,-0.5,0],[1,0,0]];
+    positions.forEach(p=>{
+      const n=new THREE.Mesh(new THREE.SphereGeometry(0.2,12,12),new THREE.MeshPhongMaterial({color:0xff4444,transparent:true,opacity:0.7}));
+      n.position.set(...p);scene.add(n);extra.push({m:n,speed:0.5});
+    });
+  } else if(type==='robot'){
+    // Robot body
+    mesh=new THREE.Mesh(new THREE.BoxGeometry(0.8,1,0.5),new THREE.MeshPhongMaterial({color:0xe01c1c,emissive:0x1a0000}));
+    scene.add(mesh);
+    const head=new THREE.Mesh(new THREE.BoxGeometry(0.5,0.4,0.4),new THREE.MeshPhongMaterial({color:0xff3333,emissive:0x220000}));
+    head.position.y=0.75;scene.add(head);extra.push({m:head,speed:0});
+    const arm1=new THREE.Mesh(new THREE.CylinderGeometry(0.07,0.07,0.7),new THREE.MeshPhongMaterial({color:0xcc1111}));
+    arm1.position.set(-0.65,-0.1,0);arm1.rotation.z=Math.PI/4;scene.add(arm1);extra.push({m:arm1,speed:0});
+    const arm2=new THREE.Mesh(new THREE.CylinderGeometry(0.07,0.07,0.7),new THREE.MeshPhongMaterial({color:0xcc1111}));
+    arm2.position.set(0.65,-0.1,0);arm2.rotation.z=-Math.PI/4;scene.add(arm2);extra.push({m:arm2,speed:0});
+  } else if(type==='drone'){
+    // Drone body + arms
+    mesh=new THREE.Mesh(new THREE.CylinderGeometry(0.25,0.25,0.15,16),new THREE.MeshPhongMaterial({color:0xe01c1c,emissive:0x1a0000}));
+    scene.add(mesh);
+    const arms=[0,90,180,270];
+    arms.forEach(angle=>{
+      const arm=new THREE.Mesh(new THREE.BoxGeometry(0.8,0.05,0.07),new THREE.MeshPhongMaterial({color:0x880000}));
+      arm.rotation.y=angle*Math.PI/180;scene.add(arm);
+      const prop=new THREE.Mesh(new THREE.TorusGeometry(0.25,0.03,6,16),new THREE.MeshPhongMaterial({color:0xff4444,transparent:true,opacity:0.75}));
+      prop.position.set(Math.cos(angle*Math.PI/180)*0.5,0.08,Math.sin(angle*Math.PI/180)*0.5);
+      prop.rotation.x=Math.PI/2;
+      scene.add(prop);extra.push({m:prop,speed:0.15*(Math.random()>0.5?1:-1)});
+    });
+  }
+
+  let t=0;
+  function animate(){requestAnimationFrame(animate);t+=0.012;
+    if(mesh){mesh.rotation.y=t*0.6;mesh.position.y=Math.sin(t*1.2)*0.1;}
+    extra.forEach(e=>{if(e.speed!==0)e.m.rotation.y+=e.speed;});
+    renderer.render(scene,camera);}
+  animate();
+});
+</script>
+</body>
+</html>
