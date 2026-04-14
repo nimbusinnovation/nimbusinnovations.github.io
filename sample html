@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nimbus Innovations — Bridging Theory & Real-World Learning</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fugaz+One&family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --red:       #e01c1c;
+      --red-dark:  #b01212;
+      --red-dim:   #fdf0f0;
+      --ink:       #0d0d0d;
+      --ink-mid:   #2e2e2e;
+      --ink-soft:  #5a5a5a;
+      --paper:     #f9f9f9;
+      --white:     #ffffff;
+      --border:    #e0e0e0;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); font-size: 16px; line-height: 1.7; overflow-x: hidden; }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,13,13,0.97);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0 6vw;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 68px;
+    }
+    .logo { font-family: 'Fugaz One', cursive; font-size: 1.25rem; letter-spacing: 0.04em; color: var(--white); text-decoration: none; }
+    .logo span { color: var(--red); }
+    nav ul { list-style: none; display: flex; gap: 2rem; }
+    nav ul a { text-decoration: none; font-size: 0.87rem; font-weight: 500; color: rgba(255,255,255,0.5); transition: color 0.2s; }
+    nav ul a:hover { color: var(--white); }
+    .nav-cta { background: var(--red) !important; color: var(--white) !important; padding: 8px 20px; border-radius: 5px; }
+    .nav-cta:hover { background: var(--red-dark) !important; }
+
+    /* HERO */
+    .hero { min-height: 94vh; background: var(--ink); display: flex; align-items: center; padding: 6rem 6vw 4rem; position: relative; overflow: hidden; }
+    .hero-lines { position: absolute; inset: 0; z-index: 0; background-image: linear-gradient(rgba(224,28,28,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(224,28,28,0.06) 1px, transparent 1px); background-size: 52px 52px; }
+    .hero-glow { position: absolute; width: 700px; height: 700px; background: radial-gradient(circle, rgba(224,28,28,0.14) 0%, transparent 65%); right: -150px; top: 50%; transform: translateY(-50%); z-index: 0; }
+    .hero-content { position: relative; z-index: 1; max-width: 800px; }
+    .hero-tag { display: inline-flex; align-items: center; gap: 8px; background: rgba(224,28,28,0.12); color: #f87171; font-size: 0.78rem; font-weight: 500; padding: 6px 14px; border-radius: 20px; margin-bottom: 2rem; border: 1px solid rgba(224,28,28,0.25); animation: fadeUp 0.6s ease both; }
+    .hero-tag::before { content: ''; width: 6px; height: 6px; background: var(--red); border-radius: 50%; }
+    .hero h1 { font-family: 'DM Serif Display', serif; font-size: clamp(2.8rem, 5.5vw, 4.6rem); line-height: 1.1; letter-spacing: -0.02em; color: var(--white); margin-bottom: 1.5rem; animation: fadeUp 0.6s 0.1s ease both; }
+    .hero h1 em { font-style: italic; color: var(--red); }
+    .hero p { font-size: 1.1rem; color: rgba(255,255,255,0.52); max-width: 520px; margin-bottom: 2.5rem; font-weight: 300; animation: fadeUp 0.6s 0.2s ease both; }
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; animation: fadeUp 0.6s 0.3s ease both; }
+    .btn-primary { background: var(--red); color: var(--white); padding: 14px 32px; border-radius: 6px; font-size: 0.95rem; font-weight: 500; text-decoration: none; transition: background 0.2s, transform 0.15s; border: none; cursor: pointer; }
+    .btn-primary:hover { background: var(--red-dark); transform: translateY(-2px); }
+    .btn-outline { background: transparent; color: rgba(255,255,255,0.7); padding: 14px 32px; border-radius: 6px; font-size: 0.95rem; font-weight: 500; text-decoration: none; border: 1px solid rgba(255,255,255,0.14); transition: border-color 0.2s, color 0.2s, transform 0.15s; cursor: pointer; }
+    .btn-outline:hover { border-color: var(--red); color: var(--white); transform: translateY(-2px); }
+
+    /* SECTION BASE */
+    section { padding: 6rem 6vw; }
+    .section-label { font-size: 0.72rem; font-weight: 500; color: var(--red); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 0.75rem; }
+    .section-title { font-family: 'DM Serif Display', serif; font-size: clamp(1.9rem, 3vw, 2.7rem); line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 1rem; }
+    .section-sub { font-size: 1rem; color: var(--ink-soft); max-width: 520px; font-weight: 300; margin-bottom: 3rem; line-height: 1.75; }
+
+    /* PROBLEM */
+    .problem { background: var(--white); }
+    .problem-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); border: 1.5px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .problem-card { padding: 2.2rem 2rem; background: var(--white); border-right: 1.5px solid var(--border); transition: background 0.2s; }
+    .problem-card:last-child { border-right: none; }
+    .problem-card:hover { background: var(--red-dim); }
+    .p-icon { width: 42px; height: 42px; background: var(--red-dim); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.2rem; font-size: 1.3rem; }
+    .problem-card h3 { font-size: 1rem; font-weight: 500; margin-bottom: 0.5rem; }
+    .problem-card p { font-size: 0.88rem; color: var(--ink-soft); line-height: 1.65; }
+
+    /* SOLUTION */
+    .solution { background: var(--paper); }
+    .solution-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+    .workshop-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .workshop-header { background: var(--ink); padding: 2rem; color: var(--white); }
+    .workshop-header h3 { font-family: 'DM Serif Display', serif; font-size: 1.4rem; margin-bottom: 0.4rem; }
+    .workshop-header p { font-size: 0.87rem; opacity: 0.55; font-weight: 300; }
+    .workshop-list { padding: 1.6rem 2rem; list-style: none; display: flex; flex-direction: column; gap: 14px; }
+    .workshop-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 0.92rem; color: var(--ink-mid); }
+    .workshop-list li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--red); flex-shrink: 0; margin-top: 8px; }
+    .solution-points { display: flex; flex-direction: column; gap: 1.5rem; }
+    .sol-point { display: flex; gap: 1.2rem; align-items: flex-start; padding: 1.4rem; border-radius: 10px; border: 1.5px solid transparent; transition: border-color 0.2s, background 0.2s; }
+    .sol-point:hover { border-color: rgba(224,28,28,0.18); background: var(--red-dim); }
+    .sol-num { font-family: 'Fugaz One', cursive; font-size: 1.6rem; color: var(--red); line-height: 1; min-width: 32px; }
+    .sol-point h4 { font-size: 1rem; font-weight: 500; margin-bottom: 4px; }
+    .sol-point p { font-size: 0.88rem; color: var(--ink-soft); line-height: 1.6; }
+
+    /* RED STRIP */
+    .red-strip { background: var(--red); padding: 2.5rem 6vw; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .red-strip p { font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: var(--white); font-style: italic; }
+    .red-strip span { font-size: 0.85rem; color: rgba(255,255,255,0.72); font-weight: 300; max-width: 360px; line-height: 1.6; }
+
+    /* VISION */
+    .vision { background: var(--ink); color: var(--white); }
+    .vision .section-label { color: var(--red); }
+    .vision .section-title { color: var(--white); }
+    .vision .section-sub { color: rgba(255,255,255,0.42); }
+    .vision-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2px; }
+    .vision-step { padding: 2.5rem 2rem; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; transition: background 0.2s; }
+    .vision-step:hover { background: rgba(224,28,28,0.1); border-color: rgba(224,28,28,0.2); }
+    .vs-num { font-family: 'Fugaz One', cursive; font-size: 2.8rem; color: rgba(224,28,28,0.3); line-height: 1; margin-bottom: 1rem; }
+    .vision-step h3 { font-size: 1rem; font-weight: 500; margin-bottom: 0.5rem; }
+    .vision-step p { font-size: 0.87rem; color: rgba(255,255,255,0.38); line-height: 1.65; }
+
+    /* ABOUT */
+    .about { background: var(--white); }
+    .about-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+    .about-text p { font-size: 0.96rem; color: var(--ink-mid); line-height: 1.78; margin-bottom: 1rem; font-weight: 300; }
+    .founder-card { background: var(--ink); border-radius: 12px; padding: 2.5rem; color: var(--white); }
+    .founder-card .avatar { width: 60px; height: 60px; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; font-family: 'Fugaz One', cursive; font-size: 1.4rem; color: var(--white); margin-bottom: 1.2rem; }
+    .founder-card h4 { font-size: 1rem; font-weight: 500; margin-bottom: 4px; }
+    .founder-card .role { font-size: 0.8rem; color: var(--red); font-weight: 500; margin-bottom: 1.2rem; }
+    .founder-card p { font-size: 0.88rem; color: rgba(255,255,255,0.46); line-height: 1.7; font-weight: 300; }
+    .badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1.4rem; }
+    .badge { font-size: 0.75rem; font-weight: 500; padding: 5px 12px; border-radius: 20px; background: rgba(224,28,28,0.14); color: #f87171; border: 1px solid rgba(224,28,28,0.24); }
+
+    /* AUDIENCE */
+    .audience { background: var(--paper); }
+    .audience-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }
+    .aud-card { background: var(--white); border: 1.5px solid var(--border); border-top: 3px solid var(--red); border-radius: 10px; padding: 2rem 1.8rem; transition: box-shadow 0.2s, transform 0.2s; }
+    .aud-card:hover { box-shadow: 0 8px 32px rgba(224,28,28,0.1); transform: translateY(-4px); }
+    .aud-icon { font-size: 2rem; margin-bottom: 1rem; }
+    .aud-card h3 { font-size: 1rem; font-weight: 500; margin-bottom: 0.4rem; }
+    .aud-card p { font-size: 0.87rem; color: var(--ink-soft); line-height: 1.6; }
+
+    /* CTA */
+    .cta-section { background: var(--ink); color: var(--white); text-align: center; padding: 8rem 6vw; position: relative; overflow: hidden; }
+    .cta-glow { position: absolute; width: 700px; height: 400px; background: radial-gradient(ellipse, rgba(224,28,28,0.16) 0%, transparent 65%); left: 50%; top: 50%; transform: translate(-50%,-50%); z-index: 0; }
+    .cta-content { position: relative; z-index: 1; }
+    .cta-section .section-label { color: var(--red); }
+    .cta-section h2 { font-family: 'DM Serif Display', serif; font-size: clamp(2rem, 4vw, 3.4rem); line-height: 1.15; margin-bottom: 1.2rem; letter-spacing: -0.02em; }
+    .cta-section p { font-size: 1.05rem; color: rgba(255,255,255,0.48); max-width: 480px; margin: 0 auto 2.5rem; font-weight: 300; }
+    .btn-red { background: var(--red); color: var(--white); padding: 15px 38px; border-radius: 6px; font-size: 0.95rem; font-weight: 500; text-decoration: none; transition: background 0.2s, transform 0.15s; display: inline-block; }
+    .btn-red:hover { background: var(--red-dark); transform: translateY(-2px); }
+
+    /* FOOTER */
+    footer { background: #080808; color: rgba(255,255,255,0.28); padding: 2.5rem 6vw; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 0.82rem; border-top: 1px solid rgba(255,255,255,0.05); }
+    footer .logo { color: var(--white); font-size: 1.1rem; }
+    footer .logo span { color: var(--red); }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+    .reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* MOBILE */
+    @media (max-width: 768px) {
+      nav ul { display: none; }
+      .solution-wrap, .about-wrap { grid-template-columns: 1fr; gap: 2.5rem; }
+      .problem-card { border-right: none; border-bottom: 1.5px solid var(--border); }
+      .problem-card:last-child { border-bottom: none; }
+      .hero { padding: 5rem 6vw 3rem; min-height: auto; }
+      section { padding: 4rem 6vw; }
+      .red-strip { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">NIMBUS <span>INNOVATIONS</span></a>
+  <ul>
+    <li><a href="#problem">The Problem</a></li>
+    <li><a href="#solution">Our Approach</a></li>
+    <li><a href="#vision">Vision</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact" class="nav-cta">Partner With Us</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-lines"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Education &amp; Innovation Initiative · India</div>
+    <h1>Bridging the gap between<br/><em>theory and real learning.</em></h1>
+    <p>Nimbus Innovations brings hands-on STEM workshops and innovation experiences directly to schools — helping students build real things, develop real skills, and discover their real potential.</p>
+    <div class="hero-btns">
+      <a href="#contact" class="btn-primary">Partner With Your School</a>
+      <a href="#solution" class="btn-outline">See What We Do</a>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem" id="problem">
+  <div class="reveal">
+    <div class="section-label">The Gap We're Closing</div>
+    <h2 class="section-title">Students aren't lacking intelligence.<br/>They lack direction and exposure.</h2>
+    <p class="section-sub">India's education system produces sharp students — but leaves a critical gap between classroom theory and real-world application.</p>
+  </div>
+  <div class="problem-grid reveal">
+    <div class="problem-card">
+      <div class="p-icon">📚</div>
+      <h3>Overly Theoretical</h3>
+      <p>Students memorize concepts but rarely get hands-on exposure or practical understanding of how things actually work.</p>
+    </div>
+    <div class="problem-card">
+      <div class="p-icon">🏭</div>
+      <h3>Industry Disconnect</h3>
+      <p>There's a wide gap between what students study in school and what industry actually requires from young professionals.</p>
+    </div>
+    <div class="problem-card">
+      <div class="p-icon">🔭</div>
+      <h3>Lack of Exposure</h3>
+      <p>Without opportunities to build real things early, students never discover what they're truly capable of achieving.</p>
+    </div>
+    <div class="problem-card">
+      <div class="p-icon">🧭</div>
+      <h3>No Direction</h3>
+      <p>Students have potential but no structured path to channel it — no projects, no mentorship, no innovation culture in school.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section class="solution" id="solution">
+  <div class="reveal">
+    <div class="section-label">Our Approach</div>
+    <h2 class="section-title">Practical, hands-on learning<br/>that actually sticks.</h2>
+    <p class="section-sub">We don't just teach — we build. Students work in teams, tackle real problems, and present their own creations.</p>
+  </div>
+  <div class="solution-wrap">
+    <div class="workshop-card reveal">
+      <div class="workshop-header">
+        <h3>STEM &amp; Innovation Workshops</h3>
+        <p>2–3 day intensive programs conducted inside your school</p>
+      </div>
+      <ul class="workshop-list">
+        <li>Students work in teams on real-world problem statements</li>
+        <li>Hands-on electronics, robotics, and engineering projects</li>
+        <li>Guided by experienced mentors from tech &amp; startup backgrounds</li>
+        <li>Teams present their finished builds to peers and faculty</li>
+        <li>Focus on creativity, collaboration, and critical thinking</li>
+        <li>Designed for school schedules — no disruption to academics</li>
+      </ul>
+    </div>
+    <div class="solution-points reveal">
+      <div class="sol-point">
+        <div class="sol-num">01</div>
+        <div>
+          <h4>Not a Coaching Class</h4>
+          <p>We don't teach to the exam. We teach to the real world — problem-solving, building, iterating, presenting.</p>
+        </div>
+      </div>
+      <div class="sol-point">
+        <div class="sol-num">02</div>
+        <div>
+          <h4>Practical Education Partner</h4>
+          <p>We work alongside schools as a long-term partner, not a one-off vendor. Every engagement is purposeful.</p>
+        </div>
+      </div>
+      <div class="sol-point">
+        <div class="sol-num">03</div>
+        <div>
+          <h4>Built for Tier 2 &amp; Tier 3 India</h4>
+          <p>We specifically focus on schools outside the metros — because that's where the opportunity gap is widest.</p>
+        </div>
+      </div>
+      <div class="sol-point">
+        <div class="sol-num">04</div>
+        <div>
+          <h4>Entry Point to a Larger Vision</h4>
+          <p>Every workshop is a seed. The goal is an innovation ecosystem — labs, centers, and communities across India.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RED STRIP -->
+<div class="red-strip">
+  <p>"Students are smart. They just need a chance to prove it."</p>
+  <span>Nimbus Innovations works directly with schools to create that chance — through real projects, real mentorship, and real outcomes.</span>
+</div>
+
+<!-- VISION -->
+<section class="vision" id="vision">
+  <div class="reveal">
+    <div class="section-label">Long-Term Vision</div>
+    <h2 class="section-title">Building a nationwide<br/>innovation ecosystem.</h2>
+    <p class="section-sub">Workshops are just the beginning. We're building the infrastructure for a generation of student innovators.</p>
+  </div>
+  <div class="vision-steps">
+    <div class="vision-step reveal">
+      <div class="vs-num">01</div>
+      <h3>School Workshops</h3>
+      <p>2–3 day STEM and innovation programs that spark curiosity and build real skills in students across India.</p>
+    </div>
+    <div class="vision-step reveal">
+      <div class="vs-num">02</div>
+      <h3>Innovation Labs</h3>
+      <p>Permanent lab setups inside school campuses — dedicated spaces for experimentation, building, and creating.</p>
+    </div>
+    <div class="vision-step reveal">
+      <div class="vs-num">03</div>
+      <h3>City-Level Centers</h3>
+      <p>Innovation centers across cities where students continue working on projects beyond the school environment.</p>
+    </div>
+    <div class="vision-step reveal">
+      <div class="vs-num">04</div>
+      <h3>National Ecosystem</h3>
+      <p>A connected network of schools, mentors, and innovators — building India's next generation of problem-solvers.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-wrap">
+    <div class="about-text reveal">
+      <div class="section-label">Who We Are</div>
+      <h2 class="section-title">Founded from experience,<br/>not assumption.</h2>
+      <p>Nimbus Innovations was founded after firsthand experience working with student interns, participating in multiple hackathons, and building a tech startup — all of which revealed the same core problem: students are smart, but under-equipped.</p>
+      <p>We are not an NGO. We are not a coaching institute. We are a practical education partner — a bridge between what students learn and what the world needs them to be able to do.</p>
+      <p>Our focus is outcomes, credibility, and long-term impact. Every school we partner with becomes part of something larger.</p>
+    </div>
+    <div class="founder-card reveal">
+      <div class="avatar">N</div>
+      <h4>Founder, Nimbus Innovations</h4>
+      <div class="role">Education Innovator &amp; Entrepreneur</div>
+      <p>Built a tech startup (Nimbus Gaming), worked with student interns, and competed in multiple hackathons — each experience making the problem clearer and the mission stronger.</p>
+      <div class="badges">
+        <span class="badge">Tech Startup Founder</span>
+        <span class="badge">Hackathon Competitor</span>
+        <span class="badge">Student Mentor</span>
+        <span class="badge">STEM Advocate</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AUDIENCE -->
+<section class="audience">
+  <div class="reveal">
+    <div class="section-label">Who We Work With</div>
+    <h2 class="section-title">Built for schools ready<br/>to do things differently.</h2>
+    <p class="section-sub">We partner with forward-thinking educational institutions that believe students deserve more than textbooks.</p>
+  </div>
+  <div class="audience-cards">
+    <div class="aud-card reveal">
+      <div class="aud-icon">🏫</div>
+      <h3>School Principals</h3>
+      <p>Leaders looking to differentiate their institution and give students a competitive, practical edge beyond academics.</p>
+    </div>
+    <div class="aud-card reveal">
+      <div class="aud-icon">📋</div>
+      <h3>School Administrators</h3>
+      <p>Decision-makers who want structured, reliable, outcome-driven programs they can present with confidence.</p>
+    </div>
+    <div class="aud-card reveal">
+      <div class="aud-icon">🌆</div>
+      <h3>Tier 2 &amp; Tier 3 Institutions</h3>
+      <p>Schools outside the metros where the gap is widest — and where our impact can be most transformative.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="cta-glow"></div>
+  <div class="cta-content">
+    <div class="section-label">Get In Touch</div>
+    <h2>Ready to bring innovation<br/>to your school?</h2>
+    <p>Let's talk about how a Nimbus Innovations workshop can transform the learning experience for your students.</p>
+    <a href="mailto:hello@nimbusinnovations.in" class="btn-red">Partner With Us →</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="logo">NIMBUS <span>INNOVATIONS</span></a>
+  <span>© 2025 Nimbus Innovations. All rights reserved.</span>
+  <span>Transforming education, one school at a time.</span>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
