@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Innovation Labs — Nimbus Innovations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Fugaz+One&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#f5f5f3;--bg2:#eeeeec;--white:#ffffff;--red:#b91c1c;--red-soft:rgba(185,28,28,0.07);--navy:#0f172a;--navy2:#1e3a8a;--ink:#111111;--ink2:#333333;--ink3:#555555;--border:#ddd;--border2:#e8e8e6;--shadow:0 2px 16px rgba(0,0,0,0.06);--shadow2:0 4px 28px rgba(0,0,0,0.1);--radius:8px;--radius2:12px}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink2);line-height:1.7;overflow-x:hidden}
+h1,h2,h3,h4{color:var(--ink);font-weight:700;line-height:1.2;letter-spacing:-0.02em}
+p{color:var(--ink3);line-height:1.75}
+a{text-decoration:none;color:inherit}
+ul{list-style:none}
+section{padding:5rem 5vw}
+
+/* ── CHANGE 5: improved section heading sizes ── */
+.section-label{font-size:0.85rem;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--red);margin-bottom:0.8rem}
+.section-title{font-size:clamp(2.2rem,3.5vw,3rem);color:var(--ink);margin-bottom:1rem;max-width:640px}
+.section-sub{font-size:0.97rem;color:var(--ink3);max-width:560px;line-height:1.75;margin-bottom:2.5rem}
+
+.btn{display:inline-block;padding:12px 28px;border-radius:var(--radius);font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:none}
+.btn-dark{background:var(--navy);color:var(--white)}
+.btn-dark:hover{background:var(--navy2);transform:translateY(-1px);box-shadow:var(--shadow2)}
+.btn-outline{background:transparent;color:var(--navy);border:1.5px solid var(--navy)}
+.btn-outline:hover{background:var(--navy);color:var(--white);transform:translateY(-1px)}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 5vw;height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(245,245,243,0.93);backdrop-filter:blur(14px);border-bottom:1px solid var(--border2);transition:box-shadow 0.3s}
+nav.scrolled{box-shadow:var(--shadow)}
+.nav-logo{font-family:'Fugaz One',cursive;font-size:1.15rem;letter-spacing:0.04em;color:var(--red)}
+.nav-menu{display:flex;align-items:center;gap:2rem}
+.nav-menu>li{position:relative}
+.nav-menu>li>a{font-size:0.85rem;font-weight:500;color:var(--ink2);transition:color 0.2s;padding:4px 0;position:relative}
+.nav-menu>li>a::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1.5px;background:var(--red);transition:width 0.2s}
+.nav-menu>li>a:hover::after,.active::after{width:100%!important}
+.nav-menu>li>a:hover,.active{color:var(--red)!important}
+.has-dropdown>a{display:flex;align-items:center;gap:4px}
+.caret{font-size:0.55rem;opacity:0.45;transition:transform 0.2s}
+.has-dropdown.open>.a .caret{transform:rotate(180deg)}
+
+/* ── CHANGE 1: CSS hover rule removed; JS now controls open/close via .dropdown-open ── */
+.dropdown{position:absolute;top:calc(100% + 14px);left:50%;background:var(--white);border:1px solid var(--border2);border-radius:var(--radius2);min-width:190px;box-shadow:var(--shadow2);opacity:0;pointer-events:none;transition:opacity 0.18s,transform 0.18s;transform:translateX(-50%) translateY(-6px)}
+.dropdown.dropdown-open{opacity:1;pointer-events:all;transform:translateX(-50%) translateY(0)}
+.dropdown li a{display:block;padding:10px 18px;font-size:0.83rem;color:var(--ink2);transition:background 0.15s,color 0.15s}
+.dropdown li a:hover{background:var(--bg);color:var(--red)}
+.dropdown li:first-child a{border-radius:var(--radius2) var(--radius2) 0 0}
+.dropdown li:last-child a{border-radius:0 0 var(--radius2) var(--radius2)}
+
+.nav-toggle{display:none;background:none;border:none;cursor:pointer;flex-direction:column;gap:5px;padding:4px}
+.nav-toggle span{width:22px;height:2px;background:var(--ink);border-radius:2px;display:block}
+.mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:var(--white);border-bottom:1px solid var(--border2);padding:1.2rem 5vw;z-index:999;box-shadow:var(--shadow2)}
+.mobile-menu.open{display:block}
+.mobile-menu a{display:block;padding:9px 0;font-size:0.88rem;color:var(--ink2);border-bottom:1px solid var(--border2);transition:color 0.2s}
+.mobile-menu a:last-child{border-bottom:none}
+.mobile-menu a:hover{color:var(--red)}
+.mob-sub a{padding-left:1rem;font-size:0.82rem;color:var(--ink3)}
+
+footer{background:var(--navy);color:rgba(255,255,255,0.45);padding:2.5rem 5vw;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;font-size:0.8rem}
+.f-logo{font-family:'Fugaz One',cursive;font-size:1rem;color:rgba(255,255,255,0.85)}
+.f-logo span{color:var(--red)}
+
+/* ── Hero image: text-free banner ── */
+.page-header{
+  background:
+    linear-gradient(to right, rgba(255,255,255,0.0) 40%, rgba(255,255,255,0.05)),
+    url('images/lab-hero.jpg') no-repeat center right / cover;
+  height: 520px;
+  width: 100%;
+  margin-top: 64px;
+  display: block;
+}
+.page-header::before{
+  content: '';
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Hero text section below image ── */
+.hero-text-center{
+  text-align: center;
+  padding: 5rem 5vw 3.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.hero-title{
+  font-size: clamp(2.4rem, 4vw, 3.2rem);
+  color: var(--ink);
+  margin-bottom: 1rem;
+}
+.hero-sub{
+  font-size: 1.05rem;
+  color: var(--ink3);
+  line-height: 1.8;
+}
+
+.divider{height:1px;background:var(--border2);margin:0 5vw}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem}
+.card{background:var(--white);border:1px solid var(--border2);border-radius:var(--radius2);padding:2rem;transition:transform 0.2s,box-shadow 0.2s}
+.card:hover{transform:translateY(-4px);box-shadow:var(--shadow2)}
+.card-icon{font-size:1.6rem;margin-bottom:1rem}
+.card h3{font-size:1rem;margin-bottom:0.4rem;color:var(--ink)}
+.card p{font-size:0.86rem;color:var(--ink3)}
+.point-list{display:flex;flex-direction:column;gap:9px;margin-top:0.8rem}
+.point-list li{display:flex;align-items:flex-start;gap:10px;font-size:0.9rem;color:var(--ink3)}
+.point-list li::before{content:'';width:6px;height:6px;background:var(--red);border-radius:50%;flex-shrink:0;margin-top:8px}
+.highlight-box{background:var(--bg2);border-left:3px solid var(--red);padding:1.4rem 1.8rem;border-radius:0 var(--radius) var(--radius) 0;margin:2rem 0}
+.highlight-box p{color:var(--ink2);font-style:italic;font-size:1rem}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
+.cta-section{background:var(--navy);padding:5rem 5vw;text-align:center}
+.cta-section h2{color:var(--white);font-size:1.8rem;margin-bottom:0.8rem}
+.cta-section p{color:rgba(255,255,255,0.55);margin-bottom:2rem;font-size:0.95rem}
+.cta-tile{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius2);padding:2.5rem;max-width:580px;margin:2rem auto 0;text-align:center}
+.cta-tile h3{color:var(--white);margin-bottom:0.6rem;font-size:1.2rem}
+.cta-tile p{color:rgba(255,255,255,0.5);font-size:0.9rem;margin-bottom:1.5rem}
+
+.reveal{opacity:0;transform:translateY(22px);transition:opacity 0.6s ease,transform 0.6s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ── CHANGE 4: centre the "What We Provide" intro block only ── */
+.section-intro-center{max-width:700px;margin:0 auto 2.5rem;text-align:center}
+.section-intro-center .section-title{max-width:100%}
+.section-intro-center .section-sub{max-width:100%;margin-bottom:0}
+
+@media(max-width:860px){.nav-menu{display:none}.nav-toggle{display:flex}.two-col{grid-template-columns:1fr}section{padding:3.5rem 5vw}}
+</style>
+</head>
+<body>
+
+<nav id="navbar">
+  <a href="index.html" class="nav-logo">NIMBUS INNOVATIONS</a>
+  <ul class="nav-menu">
+    <li><a href="index.html">Home</a></li>
+    <li class="has-dropdown">
+      <a href="#" class="active">Programs <span class="caret">▾</span></a>
+      <ul class="dropdown">
+        <li><a href="workshops.html">Workshops</a></li>
+        <li><a href="labs.html" style="color:var(--red)">Innovation Labs</a></li>
+        <li><a href="collaboration.html">Collaboration</a></li>
+        <li><a href="atl.html">Atal Tinkering Labs</a></li>
+      </ul>
+    </li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="vision.html">Vision</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+  </ul>
+  <button class="nav-toggle" id="navToggle"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Home</a>
+  <a href="#" style="font-weight:600">Programs</a>
+  <div class="mob-sub">
+    <a href="workshops.html">Workshops</a>
+    <a href="labs.html">Innovation Labs</a>
+    <a href="collaboration.html">Collaboration</a>
+    <a href="atl.html">Atal Tinkering Labs</a>
+  </div>
+  <a href="about.html">About</a>
+  <a href="vision.html">Vision</a>
+  <a href="index.html#contact">Contact</a>
+  <a href="gallery.html">Gallery</a>
+</div>
+
+<div class="page-header"></div>
+
+<section class="hero-text-center reveal">
+  <div class="section-label">Programs</div>
+  <h1 class="hero-title">Innovation Labs</h1>
+  <p class="hero-sub">
+    Nimbus Innovations designs and builds customized STEM innovation labs tailored to the specific needs of each institution — structured environments that enable students to explore, build, and innovate with real-world tools and technologies.
+  </p>
+</section>
+
+<!-- WHAT WE PROVIDE -->
+<section>
+  <!-- CHANGE 4: added section-intro-center wrapper around the intro reveal block only -->
+  <div class="reveal section-intro-center">
+    <div class="section-label">What We Provide</div>
+    <h2 class="section-title">Not just equipment.<br/>A complete learning environment.</h2>
+    <p class="section-sub">Our labs are thoughtfully designed systems — covering space, infrastructure, tools, workflow, and safety — to ensure they are used effectively and consistently.</p>
+  </div>
+  <div class="cards-grid">
+    <div class="card reveal">
+      <div class="card-icon">📐</div>
+      <h3>Customized Lab Design</h3>
+      <p>Labs are designed based on the institution's goals, available space, and student requirements. No two labs are identical.</p>
+    </div>
+    <div class="card reveal">
+      <div class="card-icon">🔌</div>
+      <h3>Integrated Technology Setup</h3>
+      <p>Includes 3D printers, development boards, sensors, and electronics systems — selected and configured for hands-on student use.</p>
+    </div>
+    <div class="card reveal">
+      <div class="card-icon">📦</div>
+      <h3>Project-Based Infrastructure</h3>
+      <p>Students work using structured project kits — designed to maximize efficiency and reduce component misuse or wastage.</p>
+    </div>
+    <div class="card reveal">
+      <div class="card-icon">🛡️</div>
+      <h3>Safety and Standards</h3>
+      <p>Proper safety practices and organized lab structure are maintained to ensure a secure and effective learning environment.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- COMPONENTS -->
+<section>
+  <div class="two-col">
+    <div class="reveal">
+      <div class="section-label">Lab Components</div>
+      <h2 class="section-title">What the lab includes.</h2>
+      <p>Each innovation lab is equipped with the tools required for meaningful, hands-on learning across key technology domains.</p>
+      <ul class="point-list">
+        <li>Electronics and embedded systems — development boards, MCUs, sensors, and modules</li>
+        <li>Digital fabrication tools including 3D printers</li>
+        <li>Hands-on experimentation and project setups</li>
+        <li>Organized storage and workflow systems for efficient usage</li>
+        <li>Documentation and reference materials for structured learning</li>
+      </ul>
+    </div>
+    <div class="reveal">
+      <div class="section-label">Why These Labs Matter</div>
+      <h2 class="section-title">What students gain.</h2>
+      <p>These labs create an environment where students can regularly interact with tools, technology, and real challenges.</p>
+      <ul class="point-list">
+        <li>Move beyond theoretical learning through consistent hands-on practice</li>
+        <li>Build and test real ideas in a structured, safe environment</li>
+        <li>Understand practical applications of technology through doing</li>
+        <li>Develop problem-solving, critical thinking, and innovation skills</li>
+      </ul>
+      <div class="highlight-box">
+        <p>"The goal is to enable institutions to build an internal ecosystem where innovation becomes a continuous process — not a one-time activity."</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="reveal">
+    <div class="section-label" style="color:rgba(255,255,255,0.45)">Get Started</div>
+    <h2>Build a future-ready innovation<br/>environment in your institution.</h2>
+    <p>Talk to us about designing a lab that fits your school's space, goals, and student needs.</p>
+    <a href="index.html#contact" class="btn" style="background:var(--white);color:var(--navy)">Get Started →</a>
+    <div class="cta-tile">
+      <h3>Request a Customized Lab Plan</h3>
+      <p>Tell us about your institution and we'll put together a tailored proposal for your innovation lab setup.</p>
+      <a href="index.html#contact" class="btn" style="background:rgba(255,255,255,0.12);color:var(--white);border:1px solid rgba(255,255,255,0.2)">Contact Us →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="f-logo">NIMBUS <span>INNOVATIONS</span></span>
+  <span>© 2025 Nimbus Innovations. All rights reserved.</span>
+  <span>Jhansi, Uttar Pradesh, India</span>
+</footer>
+
+<script>
+/* ── Scroll shadow on navbar ── */
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+});
+
+/* ── Mobile menu toggle ── */
+document.getElementById('navToggle').addEventListener('click', () => {
+  document.getElementById('mobileMenu').classList.toggle('open');
+});
+document.querySelectorAll('.mobile-menu a').forEach(a =>
+  a.addEventListener('click', () => document.getElementById('mobileMenu').classList.remove('open'))
+);
+
+/* ── CHANGE 1: Dropdown — hover with delay + click-to-pin ── */
+document.querySelectorAll('.has-dropdown').forEach(item => {
+  const dropdown = item.querySelector('.dropdown');
+  let closeTimer = null;
+  let pinned = false;
+
+  function openDropdown() {
+    clearTimeout(closeTimer);
+    dropdown.classList.add('dropdown-open');
+  }
+
+  function scheduleClose() {
+    /* Only auto-close if not pinned */
+    if (!pinned) {
+      closeTimer = setTimeout(() => {
+        dropdown.classList.remove('dropdown-open');
+      }, 300); /* ~300ms delay before disappearing */
+    }
+  }
+
+  function closeDropdown() {
+    pinned = false;
+    clearTimeout(closeTimer);
+    dropdown.classList.remove('dropdown-open');
+  }
+
+  /* Hover: open on enter, delayed close on leave */
+  item.addEventListener('mouseenter', openDropdown);
+  item.addEventListener('mouseleave', scheduleClose);
+
+  /* Keep open when cursor moves into the dropdown itself */
+  dropdown.addEventListener('mouseenter', () => clearTimeout(closeTimer));
+  dropdown.addEventListener('mouseleave', scheduleClose);
+
+  /* Click: toggle pinned state */
+  item.querySelector('a').addEventListener('click', e => {
+    e.preventDefault();
+    if (pinned) {
+      closeDropdown();
+    } else {
+      pinned = true;
+      openDropdown();
+    }
+  });
+});
+
+/* ── CHANGE 1: Close pinned dropdown when clicking anywhere outside ── */
+document.addEventListener('click', e => {
+  document.querySelectorAll('.has-dropdown').forEach(item => {
+    if (!item.contains(e.target)) {
+      const dropdown = item.querySelector('.dropdown');
+      dropdown.classList.remove('dropdown-open');
+    }
+  });
+});
+
+/* ── Scroll reveal ── */
+const ro = new IntersectionObserver((entries) => {
+  entries.forEach((x, i) => {
+    if (x.isIntersecting) {
+      setTimeout(() => x.target.classList.add('visible'), i * 80);
+      ro.unobserve(x.target);
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+</script>
+</body>
+</html>
